@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="description" content="PetCareDaily Admin Panel">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel – PetCareDaily</title>
+<style>
+:root {
+  --orange:#FF6B35; --orange-dark:#e85a25; --orange-light:#FFF3EE;
+  --sidebar-bg:#1e1e2e; --sidebar-hover:#2a2a3e; --sidebar-active:#FF6B35;
+  --white:#fff; --gray-50:#f8fafc; --gray-100:#f1f5f9;
+  --gray-200:#e2e8f0; --gray-300:#cbd5e1; --gray-400:#94a3b8;
+  --gray-600:#475569; --gray-700:#334155; --gray-900:#0f172a;
+  --green:#10b981; --red:#ef4444; --blue:#3b82f6; --yellow:#f59e0b;
+  --purple:#8b5cf6;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--gray-50);color:var(--gray-900);display:flex;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{width:240px;background:var(--sidebar-bg);color:#c8d0e0;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:50;overflow-y:auto}
+.sidebar-logo{padding:20px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #2a2a3e}
+.logo-icon{width:36px;height:36px;background:var(--orange);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.logo-text{font-size:15px;font-weight:700;color:#fff}.logo-text span{color:var(--orange)}
+.sidebar-section{padding:10px 0}
+.sidebar-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#4a4a6a;padding:8px 18px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 18px;font-size:13.5px;font-weight:500;cursor:pointer;transition:all .15s;border-left:3px solid transparent;color:#9aa0b4}
+.nav-item:hover{background:var(--sidebar-hover);color:#fff}
+.nav-item.active{background:rgba(255,107,53,.12);color:var(--orange);border-color:var(--orange)}
+.nav-item .icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--orange);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px}
+.sidebar-footer{margin-top:auto;padding:16px 18px;border-top:1px solid #2a2a3e;font-size:12px;color:#4a4a6a}
+
+/* ── MAIN ── */
+.main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:#fff;border-bottom:1px solid var(--gray-200);padding:0 28px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.topbar-title{font-size:18px;font-weight:700;color:var(--gray-900)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:var(--orange);color:#fff}.btn-primary:hover{background:var(--orange-dark)}
+.btn-secondary{background:var(--gray-100);color:var(--gray-700);border:1px solid var(--gray-200)}.btn-secondary:hover{background:var(--gray-200)}
+.btn-danger{background:#fef2f2;color:var(--red);border:1px solid #fecaca}.btn-danger:hover{background:var(--red);color:#fff}
+.btn-success{background:#f0fdf4;color:var(--green);border:1px solid #bbf7d0}.btn-success:hover{background:var(--green);color:#fff}
+.avatar-btn{width:36px;height:36px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;cursor:pointer}
+
+.page{display:none;padding:28px;flex:1}
+.page.active{display:block}
+
+/* ── CARDS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:#fff;border-radius:12px;padding:20px;border:1px solid var(--gray-200);display:flex;align-items:center;gap:16px}
+.stat-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.stat-info p{font-size:12px;color:var(--gray-400);margin-bottom:3px}
+.stat-info h3{font-size:22px;font-weight:800;color:var(--gray-900)}
+.stat-info small{font-size:11px;color:var(--green);font-weight:600}
+
+/* ── TABLE ── */
+.card{background:#fff;border-radius:12px;border:1px solid var(--gray-200);overflow:hidden;margin-bottom:24px}
+.card-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-100)}
+.card-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.card-actions{display:flex;gap:8px;align-items:center}
+.search-input{padding:7px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;width:200px;outline:none;transition:border .15s}
+.search-input:focus{border-color:var(--orange)}
+select.filter-select{padding:7px 10px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;outline:none;background:#fff;cursor:pointer}
+
+table{width:100%;border-collapse:collapse}
+th{background:var(--gray-50);padding:11px 16px;text-align:left;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray-400);border-bottom:1px solid var(--gray-200)}
+td{padding:13px 16px;border-bottom:1px solid var(--gray-100);font-size:13.5px;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--gray-50)}
+.td-title{font-weight:600;color:var(--gray-900);max-width:280px}
+.td-title small{display:block;font-weight:400;color:var(--gray-400);font-size:12px;margin-top:2px}
+
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-published{background:#f0fdf4;color:#16a34a}
+.badge-draft{background:#fef9c3;color:#ca8a04}
+.badge-cat{background:#f3f0ff;color:var(--purple)}
+.badge-dog{background:#eff6ff;color:var(--blue)}
+.badge-health{background:#f0fdf4;color:var(--green)}
+.badge-nutrition{background:#fff7ed;color:#ea580c}
+.badge-products{background:#fdf4ff;color:var(--purple)}
+
+.action-btns{display:flex;gap:6px}
+.icon-btn{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;font-size:14px;transition:all .15s}
+.icon-btn-edit{background:#eff6ff;color:var(--blue)}.icon-btn-edit:hover{background:var(--blue);color:#fff}
+.icon-btn-del{background:#fef2f2;color:var(--red)}.icon-btn-del:hover{background:var(--red);color:#fff}
+.icon-btn-view{background:var(--orange-light);color:var(--orange)}.icon-btn-view:hover{background:var(--orange);color:#fff}
+
+/* ── EDITOR ── */
+.editor-layout{display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start}
+.editor-main{display:flex;flex-direction:column;gap:16px}
+.editor-sidebar{display:flex;flex-direction:column;gap:16px}
+.field-group{background:#fff;border-radius:12px;border:1px solid var(--gray-200);padding:20px}
+.field-group-title{font-size:13px;font-weight:700;color:var(--gray-700);margin-bottom:14px;display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--gray-100)}
+label{display:block;font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:5px;margin-top:12px}
+label:first-child{margin-top:0}
+input[type=text],input[type=url],input[type=number],input[type=email],textarea,select{width:100%;padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13.5px;font-family:inherit;outline:none;transition:border .15s;background:#fff;color:var(--gray-900)}
+input:focus,textarea:focus,select:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,107,53,.08)}
+textarea{resize:vertical;min-height:120px;line-height:1.6}
+.content-editor{min-height:320px;font-family:inherit;line-height:1.8}
+.char-count{font-size:11px;color:var(--gray-400);margin-top:4px;text-align:right}
+.char-count.ok{color:var(--green)}
+.char-count.warn{color:var(--yellow)}
+.char-count.bad{color:var(--red)}
+
+/* SEO Preview */
+.seo-preview{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;padding:14px;margin-top:8px}
+.seo-preview-url{font-size:12px;color:var(--green);margin-bottom:4px;word-break:break-all}
+.seo-preview-title{font-size:16px;color:#1a0dab;font-weight:400;cursor:pointer;margin-bottom:3px;line-height:1.3}
+.seo-preview-title:hover{text-decoration:underline}
+.seo-preview-desc{font-size:13px;color:var(--gray-600);line-height:1.5}
+
+/* SEO Score */
+.seo-score-bar{height:6px;background:var(--gray-200);border-radius:3px;margin:8px 0;overflow:hidden}
+.seo-score-fill{height:100%;border-radius:3px;transition:width .4s}
+.seo-checks{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.seo-check{display:flex;align-items:flex-start;gap:8px;font-size:12px}
+.seo-check-icon{font-size:13px;flex-shrink:0;margin-top:1px}
+
+/* Affiliate fields */
+.affiliate-badge{display:inline-flex;align-items:center;gap:4px;background:var(--orange-light);color:var(--orange);padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;margin-bottom:8px}
+.commission-display{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.commission-display .label{font-size:11px;color:var(--gray-400)}
+.commission-display .value{font-size:16px;font-weight:800;color:var(--green)}
+
+/* Tabs */
+.tab-bar{display:flex;border-bottom:2px solid var(--gray-200);margin-bottom:16px}
+.tab{padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;color:var(--gray-400);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab.active{color:var(--orange);border-color:var(--orange)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--gray-900);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;transform:translateY(80px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:14px;padding:28px;max-width:440px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal h3{font-size:17px;font-weight:700;margin-bottom:10px}
+.modal p{font-size:13.5px;color:var(--gray-600);line-height:1.6;margin-bottom:20px}
+.modal-btns{display:flex;gap:10px;justify-content:flex-end}
+
+/* Image upload area */
+.upload-area{border:2px dashed var(--gray-300);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all .15s;margin-top:4px}
+.upload-area:hover{border-color:var(--orange);background:var(--orange-light)}
+.upload-area p{font-size:13px;color:var(--gray-400);margin-top:6px}
+.preview-img{width:100%;border-radius:8px;margin-top:8px;max-height:160px;object-fit:cover;display:none}
+
+/* Slug preview */
+.slug-preview{font-size:11px;color:var(--gray-400);margin-top:4px;display:flex;align-items:center;gap:4px}
+.slug-preview code{background:var(--gray-100);padding:2px 6px;border-radius:4px;color:var(--orange);font-size:11px}
+
+/* Toggle */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0}
+.toggle-label{font-size:13px;font-weight:600;color:var(--gray-700)}
+.toggle{width:40px;height:22px;background:var(--gray-300);border-radius:11px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--orange)}
+.toggle::after{content:'';position:absolute;width:16px;height:16px;background:#fff;border-radius:50%;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle.on::after{left:21px}
+
+/* Pagination */
+.pagination{display:flex;align-items:center;justify-content:between;padding:14px 20px;border-top:1px solid var(--gray-100);gap:8px}
+.pag-info{font-size:12px;color:var(--gray-400);margin-right:auto}
+.pag-btn{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;border:1px solid var(--gray-200);cursor:pointer;font-size:13px;font-weight:600;color:var(--gray-600);background:#fff;transition:all .15s}
+.pag-btn:hover{border-color:var(--orange);color:var(--orange)}
+.pag-btn.active{background:var(--orange);color:#fff;border-color:var(--orange)}
+</style>
+  <!-- SEO -->
+  <meta name="robots" content="noindex,nofollow">
+  
+  <meta name="author" content="PetCareDaily">
+  <meta name="theme-color" content="#FF6B35">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🐾</div>
+    <div class="logo-text">PetCare<span>Daily</span></div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Main</div>
+    <div class="nav-item active" onclick="goTo('dashboard')">
+      <span class="icon">📊</span> Dashboard
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Content</div>
+    <div class="nav-item" onclick="goTo('posts')">
+      <span class="icon">📝</span> All Posts
+      <span class="nav-badge" id="post-count">0</span>
+    </div>
+    <div class="nav-item" onclick="newPost()">
+      <span class="icon">➕</span> New Post
+    </div>
+    <div class="nav-item" onclick="goTo('categories')">
+      <span class="icon">🗂️</span> Categories
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Products</div>
+    <div class="nav-item" onclick="goTo('products')">
+      <span class="icon">🛍️</span> All Products
+      <span class="nav-badge" id="prod-count">0</span>
+    </div>
+    <div class="nav-item" onclick="newProduct()">
+      <span class="icon">➕</span> New Product
+    </div>
+    <div class="nav-item" onclick="goTo('prod-cats')">
+      <span class="icon">📦</span> Product Categories
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Site</div>
+    <div class="nav-item" onclick="goTo('seo')">
+      <span class="icon">🔍</span> SEO Settings
+    </div>
+    <div class="nav-item" onclick="goTo('settings')">
+      <span class="icon">⚙️</span> Settings
+    </div>
+    <div class="nav-item" onclick="window.open('pcd.html')">
+      <span class="icon">🌐</span> View Site ↗
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    Logged in as <strong style="color:#fff">Admin</strong><br>
+    PetCareDaily v1.0
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-title" id="page-title">Dashboard</div>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-btn btn-secondary" onclick="window.open('pcd.html')">🌐 View Site</button>
+      <div class="avatar-btn" title="Admin">A</div>
+    </div>
+  </div>
+
+  <!-- ══ DASHBOARD ══ -->
+  <div id="page-dashboard" class="page active">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#FFF3EE">📝</div>
+        <div class="stat-info">
+          <p>Total Posts</p>
+          <h3 id="dash-posts">0</h3>
+          <small>↑ Active articles</small>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#f0fdf4">🛍️</div>
+        <div class="stat-info">
+          <p>Affiliate Products</p>
+          <h3 id="dash-prods">0</h3>
+          <small>↑ Products listed</small>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#eff6ff">🗂️</div>
+        <div class="stat-info">
+          <p>Categories</p>
+          <h3 id="dash-cats">0</h3>
+          <small>Post + product</small>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fdf4ff">📈</div>
+        <div class="stat-info">
+          <p>Published</p>
+          <h3 id="dash-pub">0</h3>
+          <small>Live on site</small>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📝 Recent Posts</div>
+          <button class="topbar-btn btn-primary" onclick="newPost()">+ New Post</button>
+        </div>
+        <div id="recent-posts-list" style="padding:4px 0"></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🛍️ Recent Products</div>
+          <button class="topbar-btn btn-primary" onclick="newProduct()">+ New Product</button>
+        </div>
+        <div id="recent-prods-list" style="padding:4px 0"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ALL POSTS ══ -->
+  <div id="page-posts" class="page">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📝 All Posts</div>
+        <div class="card-actions">
+          <input class="search-input" type="text" placeholder="🔍 Search posts..." oninput="filterPosts(this.value)">
+          <select class="filter-select" onchange="filterPostsCat(this.value)" id="post-filter-cat">
+            <option value="">All Categories</option>
+          </select>
+          <button class="topbar-btn btn-primary" onclick="newPost()">+ New Post</button>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:32px"><input type="checkbox"></th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>SEO Score</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="posts-tbody"></tbody>
+      </table>
+      <div class="pagination">
+        <span class="pag-info" id="posts-pag-info">Showing 0 posts</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ POST EDITOR ══ -->
+  <div id="page-post-editor" class="page">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="topbar-btn btn-secondary" onclick="goTo('posts')">← Back</button>
+        <span style="font-size:16px;font-weight:700" id="editor-title-label">New Post</span>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="topbar-btn btn-secondary" onclick="saveDraft()">💾 Save Draft</button>
+        <button class="topbar-btn btn-primary" onclick="publishPost()">🚀 Publish</button>
+      </div>
+    </div>
+
+    <div class="editor-layout">
+      <!-- Main -->
+      <div class="editor-main">
+        <!-- Title -->
+        <div class="field-group">
+          <label>Post Title *</label>
+          <input type="text" id="pe-title" placeholder="Enter post title..." oninput="updateSlugFromTitle(this.value); updateSeoPreview()">
+          <div class="slug-preview">🔗 Slug: <code id="pe-slug-display">your-post-title</code></div>
+        </div>
+
+        <!-- Content -->
+        <div class="field-group">
+          <div class="tab-bar">
+            <div class="tab active" onclick="switchTab('content','write',this)">✏️ Write</div>
+            <div class="tab" onclick="switchTab('content','preview-tab',this)">👁️ Preview</div>
+          </div>
+          <div class="tab-panel active" id="content-write">
+            <label>Content</label>
+            <textarea class="content-editor" id="pe-content" placeholder="Write your article content here...&#10;&#10;Tip: Include your focus keyword naturally throughout the content."></textarea>
+          </div>
+          <div class="tab-panel" id="content-preview-tab">
+            <div style="padding:16px;background:var(--gray-50);border-radius:8px;min-height:300px;line-height:1.8;font-size:14px;white-space:pre-wrap" id="content-preview-html">Start writing to preview...</div>
+          </div>
+        </div>
+
+        <!-- SEO Panel -->
+        <div class="field-group">
+          <div class="field-group-title">🔍 SEO Optimization</div>
+
+          <label>Focus Keyword</label>
+          <input type="text" id="pe-keyword" placeholder="e.g. best cat food for indoor cats" oninput="updateSeoScore()">
+
+          <label>SEO Title <span style="color:var(--gray-400);font-weight:400">(shown in Google)</span></label>
+          <input type="text" id="pe-seo-title" placeholder="SEO title (50–60 characters recommended)" oninput="updateSeoPreview(); checkSeoTitle()">
+          <div class="char-count" id="seo-title-count">0 / 60 chars</div>
+
+          <label>Meta Description</label>
+          <textarea id="pe-meta" rows="3" placeholder="Write a compelling description (120–155 characters)..." oninput="updateSeoPreview(); checkMeta()"></textarea>
+          <div class="char-count" id="meta-count">0 / 155 chars</div>
+
+          <label>Google Preview</label>
+          <div class="seo-preview">
+            <div class="seo-preview-url" id="seo-prev-url">petcaredaily.com › your-post-title</div>
+            <div class="seo-preview-title" id="seo-prev-title">Your Post Title Here</div>
+            <div class="seo-preview-desc" id="seo-prev-desc">Your meta description will appear here. Make it compelling to improve click-through rate.</div>
+          </div>
+
+          <label style="margin-top:16px">SEO Score</label>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <div class="seo-score-bar" style="flex:1"><div class="seo-score-fill" id="seo-score-fill" style="width:0%;background:var(--red)"></div></div>
+            <span style="font-size:13px;font-weight:700" id="seo-score-label">0 / 100</span>
+          </div>
+          <div class="seo-checks" id="seo-checks"></div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="editor-sidebar">
+        <!-- Publish -->
+        <div class="field-group">
+          <div class="field-group-title">📤 Publish</div>
+          <div class="toggle-row">
+            <span class="toggle-label">Status</span>
+            <span style="font-size:12px;font-weight:700;color:var(--green)" id="status-label">Published</span>
+          </div>
+          <label>Visibility</label>
+          <select id="pe-visibility"><option>Public</option><option>Private</option></select>
+          <label>Publish Date</label>
+          <input type="text" id="pe-date" placeholder="e.g. June 20, 2026">
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button class="topbar-btn btn-secondary" style="flex:1" onclick="saveDraft()">Draft</button>
+            <button class="topbar-btn btn-primary" style="flex:1" onclick="publishPost()">Publish</button>
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div class="field-group">
+          <div class="field-group-title">🗂️ Category</div>
+          <select id="pe-category">
+            <option value="">— Select —</option>
+          </select>
+          <label style="margin-top:12px">Pet Type</label>
+          <select id="pe-pet-type">
+            <option value="">— Select —</option>
+            <option>🐱 Cats</option>
+            <option>🐶 Dogs</option>
+            <option>Both</option>
+          </select>
+          <label>Tags</label>
+          <input type="text" id="pe-tags" placeholder="cat food, nutrition, indoor">
+        </div>
+
+        <!-- Featured Image -->
+        <div class="field-group">
+          <div class="field-group-title">🖼️ Featured Image</div>
+          <label>Image Emoji (for display)</label>
+          <input type="text" id="pe-emoji" placeholder="e.g. 😸" maxlength="4">
+          <label>Image URL (optional)</label>
+          <input type="url" id="pe-img-url" placeholder="https://...">
+          <div class="upload-area" style="margin-top:8px">
+            <div style="font-size:28px">🖼️</div>
+            <p>Paste image URL above or drag & drop</p>
+          </div>
+        </div>
+
+        <!-- Affiliate Link in Post -->
+        <div class="field-group">
+          <div class="field-group-title">🔗 Affiliate Link in Post</div>
+          <label>Product Link (optional)</label>
+          <input type="url" id="pe-affiliate-url" placeholder="https://chewy.com/...">
+          <label>CTA Button Text</label>
+          <input type="text" id="pe-cta-text" placeholder="Check Price on Chewy →">
+          <label>Network</label>
+          <select id="pe-network">
+            <option>None</option>
+            <option>Amazon Associates</option>
+            <option>Chewy Affiliate</option>
+            <option>Holistapet</option>
+            <option>BarkBox</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ALL PRODUCTS ══ -->
+  <div id="page-products" class="page">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🛍️ All Products</div>
+        <div class="card-actions">
+          <input class="search-input" type="text" placeholder="🔍 Search products..." oninput="filterProds(this.value)">
+          <select class="filter-select" onchange="filterProdsCat(this.value)">
+            <option value="">All Categories</option>
+          </select>
+          <button class="topbar-btn btn-primary" onclick="newProduct()">+ New Product</button>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:32px"><input type="checkbox"></th>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Network</th>
+            <th>Price</th>
+            <th>Commission</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="prods-tbody"></tbody>
+      </table>
+      <div class="pagination">
+        <span class="pag-info" id="prods-pag-info">Showing 0 products</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PRODUCT EDITOR ══ -->
+  <div id="page-product-editor" class="page">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="topbar-btn btn-secondary" onclick="goTo('products')">← Back</button>
+        <span style="font-size:16px;font-weight:700" id="prod-editor-label">New Product</span>
+      </div>
+      <button class="topbar-btn btn-primary" onclick="saveProduct()">💾 Save Product</button>
+    </div>
+
+    <div class="editor-layout">
+      <div class="editor-main">
+        <div class="field-group">
+          <label>Product Name *</label>
+          <input type="text" id="pp-name" placeholder="e.g. PetSafe Drinkwell Fountain">
+          <label>Description</label>
+          <textarea id="pp-desc" rows="4" placeholder="Describe the product — what it does, who it's for, why readers should buy it..."></textarea>
+          <label>Full Review / Content</label>
+          <textarea id="pp-review" rows="6" placeholder="Write a detailed review or buying guide for this product..."></textarea>
+        </div>
+
+        <!-- Affiliate Info -->
+        <div class="field-group">
+          <div class="affiliate-badge">💰 Affiliate Product</div>
+          <div class="field-group-title">🔗 Affiliate Details</div>
+          <label>Affiliate Network</label>
+          <select id="pp-network">
+            <option>Amazon Associates</option>
+            <option>Chewy Affiliate</option>
+            <option>BarkBox</option>
+            <option>Holistapet (35%)</option>
+            <option>Innovet (40%)</option>
+            <option>Hepper (12%)</option>
+            <option>PetSmart (4.8%)</option>
+            <option>Other</option>
+          </select>
+          <label>Affiliate Link *</label>
+          <input type="url" id="pp-url" placeholder="https://www.amazon.com/dp/...?tag=petcaredaily-20">
+          <label>Button / CTA Text</label>
+          <input type="text" id="pp-cta" placeholder="Check Price on Amazon →" value="Check Price on Amazon →">
+
+          <div class="commission-display" style="margin-top:12px">
+            <div><div class="label">Est. Commission Rate</div><input type="text" id="pp-commission" placeholder="e.g. 4.5%" style="width:100px;margin-top:4px;padding:4px 8px;font-size:13px"></div>
+            <div><div class="label">Avg. Order Value</div><input type="text" id="pp-aov" placeholder="e.g. $45" style="width:100px;margin-top:4px;padding:4px 8px;font-size:13px"></div>
+            <div><div class="label">Est. Earn/Sale</div><div class="value" id="pp-earn-est">—</div></div>
+          </div>
+        </div>
+
+        <!-- SEO for Product -->
+        <div class="field-group">
+          <div class="field-group-title">🔍 Product SEO</div>
+          <label>Focus Keyword</label>
+          <input type="text" id="pp-keyword" placeholder="e.g. best cat water fountain 2026">
+          <label>SEO Title</label>
+          <input type="text" id="pp-seo-title" placeholder="SEO title (50–60 chars)">
+          <label>Meta Description</label>
+          <textarea id="pp-meta" rows="2" placeholder="Meta description (120–155 chars)..."></textarea>
+        </div>
+      </div>
+
+      <div class="editor-sidebar">
+        <!-- Pricing -->
+        <div class="field-group">
+          <div class="field-group-title">💵 Pricing</div>
+          <label>Regular Price ($)</label>
+          <input type="number" id="pp-price" placeholder="0.00" step="0.01">
+          <label>Sale Price ($) — optional</label>
+          <input type="number" id="pp-sale" placeholder="0.00" step="0.01">
+          <label>Currency</label>
+          <select id="pp-currency"><option>USD</option><option>GBP</option><option>EUR</option><option>AUD</option></select>
+        </div>
+
+        <!-- Product Details -->
+        <div class="field-group">
+          <div class="field-group-title">📦 Product Details</div>
+          <label>Category</label>
+          <select id="pp-cat">
+            <option value="">— Select —</option>
+          </select>
+          <label>Pet Type</label>
+          <select id="pp-pet">
+            <option>🐱 Cats</option><option>🐶 Dogs</option><option>Both</option>
+          </select>
+          <label>Brand</label>
+          <input type="text" id="pp-brand" placeholder="e.g. PetSafe">
+          <label>Star Rating (1–5)</label>
+          <input type="number" id="pp-stars" placeholder="4.5" min="1" max="5" step="0.1">
+          <label>Product Emoji</label>
+          <input type="text" id="pp-emoji" placeholder="⛲" maxlength="4">
+          <label>Status</label>
+          <select id="pp-status"><option>Published</option><option>Draft</option></select>
+        </div>
+
+        <!-- Pros Cons -->
+        <div class="field-group">
+          <div class="field-group-title">✅ Pros & Cons</div>
+          <label>Pros (one per line)</label>
+          <textarea id="pp-pros" rows="4" placeholder="Easy to clean&#10;Quiet pump&#10;Large capacity&#10;BPA-free"></textarea>
+          <label>Cons (one per line)</label>
+          <textarea id="pp-cons" rows="3" placeholder="Pricier than basic bowls&#10;Requires electricity"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CATEGORIES ══ -->
+  <div id="page-categories" class="page">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div class="card">
+        <div class="card-header"><div class="card-title">➕ Add Category</div></div>
+        <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+          <div><label>Name *</label><input type="text" id="new-cat-name" placeholder="e.g. Cat Health"></div>
+          <div><label>Slug</label><input type="text" id="new-cat-slug" placeholder="cat-health"></div>
+          <div><label>Type</label><select id="new-cat-type"><option>Post</option><option>Product</option></select></div>
+          <div><label>Emoji</label><input type="text" id="new-cat-emoji" placeholder="❤️" maxlength="4"></div>
+          <div><label>Description</label><textarea id="new-cat-desc" rows="2" placeholder="Short description..."></textarea></div>
+          <button class="topbar-btn btn-primary" onclick="addCategory()">Add Category</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">🗂️ All Categories</div></div>
+        <table>
+          <thead><tr><th>Name</th><th>Type</th><th>Posts</th><th>Actions</th></tr></thead>
+          <tbody id="cats-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PRODUCT CATEGORIES ══ -->
+  <div id="page-prod-cats" class="page">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div class="card">
+        <div class="card-header"><div class="card-title">➕ Add Product Category</div></div>
+        <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+          <div><label>Name *</label><input type="text" id="new-pcat-name" placeholder="e.g. Water Fountains"></div>
+          <div><label>Emoji</label><input type="text" id="new-pcat-emoji" placeholder="⛲" maxlength="4"></div>
+          <div><label>Pet Type</label><select id="new-pcat-pet"><option>🐱 Cats</option><option>🐶 Dogs</option><option>Both</option></select></div>
+          <div><label>Description</label><textarea id="new-pcat-desc" rows="2" placeholder="Short description..."></textarea></div>
+          <button class="topbar-btn btn-primary" onclick="addProdCat()">Add Category</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">📦 Product Categories</div></div>
+        <table>
+          <thead><tr><th>Name</th><th>Pet</th><th>Products</th><th>Actions</th></tr></thead>
+          <tbody id="pcats-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SEO SETTINGS ══ -->
+  <div id="page-seo" class="page">
+    <div class="editor-layout">
+      <div class="field-group">
+        <div class="field-group-title">🔍 Global SEO Settings</div>
+        <label>Site Title</label>
+        <input type="text" id="seo-site-title" value="PetCareDaily – Expert Tips for Cat & Dog Owners">
+        <label>Site Description (Homepage Meta)</label>
+        <textarea id="seo-site-desc" rows="2">PetCareDaily helps cat and dog owners give their pets the happiest, healthiest life possible. Expert guides, product reviews, and vet-backed advice.</textarea>
+        <label>Default Focus Keyword Strategy</label>
+        <select><option>Long-tail keywords</option><option>Head keywords</option><option>Mixed</option></select>
+        <label>Robots.txt Rule</label>
+        <select><option>Index all pages</option><option>Noindex drafts only</option><option>Custom</option></select>
+        <label>Canonical URL Base</label>
+        <input type="url" value="https://petcaredaily.com">
+        <div style="margin-top:16px">
+          <button class="topbar-btn btn-primary" onclick="toast('✅ SEO settings saved!')">Save Settings</button>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-group-title">📊 SEO Checklist</div>
+        <div class="seo-checks">
+          <div class="seo-check"><span class="seo-check-icon">✅</span><span>Site title is set</span></div>
+          <div class="seo-check"><span class="seo-check-icon">✅</span><span>Meta description is set</span></div>
+          <div class="seo-check"><span class="seo-check-icon">⚠️</span><span>Add sitemap.xml to Google Search Console</span></div>
+          <div class="seo-check"><span class="seo-check-icon">⚠️</span><span>Set up Google Analytics</span></div>
+          <div class="seo-check"><span class="seo-check-icon">❌</span><span>robots.txt not yet configured</span></div>
+          <div class="seo-check"><span class="seo-check-icon">❌</span><span>Schema markup (JSON-LD) not added</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SETTINGS ══ -->
+  <div id="page-settings" class="page">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div class="field-group">
+        <div class="field-group-title">⚙️ General Settings</div>
+        <label>Site Name</label><input type="text" value="PetCareDaily">
+        <label>Site URL</label><input type="url" value="https://petcaredaily.com">
+        <label>Admin Email</label><input type="email" value="admin@petcaredaily.com">
+        <label>Posts Per Page</label><input type="number" value="10" min="5" max="50">
+        <label>Time Zone</label><select><option>UTC+7 (Vietnam)</option><option>UTC-5 (EST)</option><option>UTC (London)</option></select>
+        <div style="margin-top:16px"><button class="topbar-btn btn-primary" onclick="toast('✅ Settings saved!')">Save Changes</button></div>
+      </div>
+      <div class="field-group">
+        <div class="field-group-title">💰 Affiliate Settings</div>
+        <label>Amazon Tracking ID</label><input type="text" placeholder="petcaredaily-20">
+        <label>Chewy Affiliate ID</label><input type="text" placeholder="Your Chewy ID">
+        <label>Default Disclosure Text</label>
+        <textarea rows="3">This post contains affiliate links. We may earn a commission when you click and purchase, at no extra cost to you.</textarea>
+        <div class="toggle-row" style="margin-top:12px">
+          <span class="toggle-label">Show disclosure on all posts</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Open affiliate links in new tab</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div style="margin-top:12px"><button class="topbar-btn btn-primary" onclick="toast('✅ Affiliate settings saved!')">Save</button></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- Toast -->
+<div class="toast" id="toast">✅ Saved!</div>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="del-modal">
+  <div class="modal">
+    <h3>🗑️ Confirm Delete</h3>
+    <p id="del-modal-msg">Are you sure you want to delete this item? This action cannot be undone.</p>
+    <div class="modal-btns">
+      <button class="topbar-btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="topbar-btn btn-danger" id="del-confirm-btn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA STORE ──
+let posts = JSON.parse(localStorage.getItem('pcd_posts') || '[]');
+let products = JSON.parse(localStorage.getItem('pcd_products') || '[]');
+let categories = JSON.parse(localStorage.getItem('pcd_categories') || JSON.stringify([
+  {id:1,name:'Cat Care',slug:'cat-care',type:'Post',emoji:'🐱',desc:''},
+  {id:2,name:'Dog Care',slug:'dog-care',type:'Post',emoji:'🐶',desc:''},
+  {id:3,name:'Cat Nutrition',slug:'cat-nutrition',type:'Post',emoji:'🥗',desc:''},
+  {id:4,name:'Dog Nutrition',slug:'dog-nutrition',type:'Post',emoji:'🥩',desc:''},
+  {id:5,name:'Health',slug:'health',type:'Post',emoji:'❤️',desc:''},
+  {id:6,name:'Cat Behavior',slug:'cat-behavior',type:'Post',emoji:'🐾',desc:''},
+  {id:7,name:'Products',slug:'products',type:'Post',emoji:'🛍️',desc:''},
+  {id:8,name:'Senior Pets',slug:'senior-pets',type:'Post',emoji:'🧓',desc:''},
+]));
+let prodCats = JSON.parse(localStorage.getItem('pcd_prodcats') || JSON.stringify([
+  {id:1,name:'Water Fountains',emoji:'⛲',pet:'🐱 Cats',desc:''},
+  {id:2,name:'Litter Boxes',emoji:'🪣',pet:'🐱 Cats',desc:''},
+  {id:3,name:'Cat Food',emoji:'🥫',pet:'🐱 Cats',desc:''},
+  {id:4,name:'Dog Food',emoji:'🦴',pet:'🐶 Dogs',desc:''},
+  {id:5,name:'Dog Toys',emoji:'🎾',pet:'🐶 Dogs',desc:''},
+  {id:6,name:'Pet Supplements',emoji:'💊',pet:'Both',desc:''},
+  {id:7,name:'Feeders & Bowls',emoji:'🍽️',pet:'Both',desc:''},
+  {id:8,name:'Carriers & Travel',emoji:'🧳',pet:'Both',desc:''},
+]));
+
+let editingPostId = null;
+let editingProdId = null;
+let currentPage = 'dashboard';
+let deleteCallback = null;
+
+function save() {
+  localStorage.setItem('pcd_posts', JSON.stringify(posts));
+  localStorage.setItem('pcd_products', JSON.stringify(products));
+  localStorage.setItem('pcd_categories', JSON.stringify(categories));
+  localStorage.setItem('pcd_prodcats', JSON.stringify(prodCats));
+  updateCounts();
+}
+
+function uid() { return Date.now() + Math.random().toString(36).slice(2,7); }
+
+// ── NAV ──
+function goTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  currentPage = page;
+
+  const titles = {dashboard:'📊 Dashboard',posts:'📝 All Posts','post-editor':'✏️ Post Editor',products:'🛍️ All Products','product-editor':'🛍️ Product Editor',categories:'🗂️ Categories','prod-cats':'📦 Product Categories',seo:'🔍 SEO Settings',settings:'⚙️ Settings'};
+  document.getElementById('page-title').textContent = titles[page] || page;
+
+  if(page==='dashboard') { renderDashboard(); }
+  else if(page==='posts') { populateCatFilters(); renderPosts(); }
+  else if(page==='products') { populateCatFilters(); renderProducts(); }
+  else if(page==='categories') { renderCats(); }
+  else if(page==='prod-cats') { renderProdCats(); }
+  updateCounts();
+}
+
+function updateCounts() {
+  document.getElementById('post-count').textContent = posts.length;
+  document.getElementById('prod-count').textContent = products.length;
+  document.getElementById('dash-posts').textContent = posts.length;
+  document.getElementById('dash-prods').textContent = products.length;
+  document.getElementById('dash-cats').textContent = categories.length + prodCats.length;
+  document.getElementById('dash-pub').textContent = posts.filter(p=>p.status==='Published').length;
+}
+
+// ── DASHBOARD ──
+function renderDashboard() {
+  const rp = document.getElementById('recent-posts-list');
+  if(!posts.length) { rp.innerHTML='<div style="padding:20px;text-align:center;color:var(--gray-400);font-size:13px">No posts yet. <a href="#" onclick="newPost()" style="color:var(--orange)">Create your first post →</a></div>'; }
+  else {
+    rp.innerHTML = posts.slice(-5).reverse().map(p=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--gray-100)">
+        <span style="font-size:20px">${p.emoji||'📝'}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.title||'Untitled'}</div>
+          <div style="font-size:11px;color:var(--gray-400)">${p.category||'—'} · ${p.status}</div>
+        </div>
+        <button class="icon-btn icon-btn-edit" onclick="editPost('${p.id}')">✏️</button>
+      </div>`).join('');
+  }
+  const rl = document.getElementById('recent-prods-list');
+  if(!products.length) { rl.innerHTML='<div style="padding:20px;text-align:center;color:var(--gray-400);font-size:13px">No products yet. <a href="#" onclick="newProduct()" style="color:var(--orange)">Add your first product →</a></div>'; }
+  else {
+    rl.innerHTML = products.slice(-5).reverse().map(p=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--gray-100)">
+        <span style="font-size:20px">${p.emoji||'🛍️'}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.name||'Untitled'}</div>
+          <div style="font-size:11px;color:var(--green);font-weight:700">${p.price?'$'+p.price:''} ${p.commission||''}</div>
+        </div>
+        <button class="icon-btn icon-btn-edit" onclick="editProduct('${p.id}')">✏️</button>
+      </div>`).join('');
+  }
+}
+
+// ── POSTS ──
+let postSearch='', postCatFilter='';
+function renderPosts(list) {
+  if(!list) {
+    list = posts.filter(p =>
+      (!postSearch || p.title.toLowerCase().includes(postSearch.toLowerCase())) &&
+      (!postCatFilter || p.category===postCatFilter)
+    );
+  }
+  const badge = cat => {
+    const m={'Cat Care':'badge-cat','Dog Care':'badge-dog','Health':'badge-health','Cat Nutrition':'badge-nutrition','Dog Nutrition':'badge-nutrition','Products':'badge-products'};
+    return m[cat]||'badge-cat';
+  };
+  document.getElementById('posts-tbody').innerHTML = list.length ? list.map(p=>`
+    <tr>
+      <td><input type="checkbox"></td>
+      <td class="td-title">${p.emoji||'📝'} ${p.title||'Untitled'}<small>/${p.slug||'untitled'}</small></td>
+      <td><span class="badge ${badge(p.category)}">${p.category||'—'}</span></td>
+      <td><span class="badge ${p.status==='Published'?'badge-published':'badge-draft'}">${p.status}</span></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;height:5px;background:var(--gray-200);border-radius:3px;width:60px">
+            <div style="height:100%;border-radius:3px;width:${p.seoScore||0}%;background:${(p.seoScore||0)>70?'var(--green)':(p.seoScore||0)>40?'var(--yellow)':'var(--red)'}"></div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:var(--gray-600)">${p.seoScore||0}</span>
+        </div>
+      </td>
+      <td style="color:var(--gray-400);font-size:12px">${p.date||'—'}</td>
+      <td>
+        <div class="action-btns">
+          <button class="icon-btn icon-btn-edit" title="Edit" onclick="editPost('${p.id}')">✏️</button>
+          <button class="icon-btn icon-btn-view" title="Preview" onclick="toast('🌐 Preview: /${p.slug||'post'}')">👁️</button>
+          <button class="icon-btn icon-btn-del" title="Delete" onclick="confirmDelete('post','${p.id}','${(p.title||'').replace(/'/g,"\\'")}')">🗑️</button>
+        </div>
+      </td>
+    </tr>`).join('')
+  : '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--gray-400)">No posts found. <a href="#" onclick="newPost()" style="color:var(--orange)">Create your first post →</a></td></tr>';
+  document.getElementById('posts-pag-info').textContent = `Showing ${list.length} post${list.length!==1?'s':''}`;
+}
+
+function filterPosts(q){postSearch=q;renderPosts();}
+function filterPostsCat(v){postCatFilter=v;renderPosts();}
+
+function populateCatFilters() {
+  // Post category filter dropdown (posts list page)
+  const sel = document.getElementById('post-filter-cat');
+  if(sel) sel.innerHTML = '<option value="">All Categories</option>' + categories.filter(c=>c.type==='Post').map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
+
+  // Product category filter dropdown (products list page)
+  const prodSel = document.querySelector('#page-products .filter-select');
+  if(prodSel) prodSel.innerHTML = '<option value="">All Categories</option>' + prodCats.map(c=>`<option value="${c.name}">${c.emoji||''} ${c.name}</option>`).join('');
+
+  // Post editor category select
+  const pe = document.getElementById('pe-category');
+  if(pe) pe.innerHTML = '<option value="">— Select —</option>' + categories.filter(c=>c.type==='Post').map(c=>`<option value="${c.name}">${c.emoji||''} ${c.name}</option>`).join('');
+
+  // Product editor category select
+  const pp = document.getElementById('pp-cat');
+  if(pp) pp.innerHTML = '<option value="">— Select —</option>' + prodCats.map(c=>`<option value="${c.name}">${c.emoji||''} ${c.name}</option>`).join('');
+}
+
+function newPost() {
+  editingPostId = null;
+  clearPostEditor();
+  document.getElementById('editor-title-label').textContent = 'New Post';
+  goTo('post-editor');
+  populateCatFilters();
+}
+
+function editPost(id) {
+  const p = posts.find(x=>x.id===id);
+  if(!p) return;
+  editingPostId = id;
+  document.getElementById('pe-title').value = p.title||'';
+  document.getElementById('pe-slug-display').textContent = p.slug||'';
+  document.getElementById('pe-content').value = p.content||'';
+  document.getElementById('pe-keyword').value = p.keyword||'';
+  document.getElementById('pe-seo-title').value = p.seoTitle||'';
+  document.getElementById('pe-meta').value = p.meta||'';
+  document.getElementById('pe-category').value = p.category||'';
+  document.getElementById('pe-pet-type').value = p.petType||'';
+  document.getElementById('pe-tags').value = p.tags||'';
+  document.getElementById('pe-emoji').value = p.emoji||'';
+  document.getElementById('pe-img-url').value = p.imgUrl||'';
+  document.getElementById('pe-affiliate-url').value = p.affiliateUrl||'';
+  document.getElementById('pe-cta-text').value = p.ctaText||'';
+  document.getElementById('pe-network').value = p.network||'None';
+  document.getElementById('pe-date').value = p.date||'';
+  document.getElementById('editor-title-label').textContent = 'Edit: ' + (p.title||'Post');
+  updateSeoPreview(); updateSeoScore();
+  goTo('post-editor');
+  populateCatFilters();
+}
+
+function clearPostEditor() {
+  ['pe-title','pe-content','pe-keyword','pe-seo-title','pe-meta','pe-tags','pe-emoji','pe-img-url','pe-affiliate-url','pe-cta-text','pe-date'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('pe-slug-display').textContent='your-post-title';
+  document.getElementById('pe-network').value='None';
+  document.getElementById('seo-score-fill').style.width='0%';
+  document.getElementById('seo-score-label').textContent='0 / 100';
+  document.getElementById('seo-checks').innerHTML='';
+  updateSeoPreview();
+}
+
+function savePost(status) {
+  const title = document.getElementById('pe-title').value.trim();
+  if(!title){toast('⚠️ Please enter a post title!');return;}
+  const score = parseInt(document.getElementById('seo-score-label').textContent)||0;
+  const data = {
+    id: editingPostId || uid(),
+    title, status,
+    slug: slugify(title),
+    content: document.getElementById('pe-content').value,
+    keyword: document.getElementById('pe-keyword').value,
+    seoTitle: document.getElementById('pe-seo-title').value,
+    meta: document.getElementById('pe-meta').value,
+    category: document.getElementById('pe-category').value,
+    petType: document.getElementById('pe-pet-type').value,
+    tags: document.getElementById('pe-tags').value,
+    emoji: document.getElementById('pe-emoji').value,
+    imgUrl: document.getElementById('pe-img-url').value,
+    affiliateUrl: document.getElementById('pe-affiliate-url').value,
+    ctaText: document.getElementById('pe-cta-text').value,
+    network: document.getElementById('pe-network').value,
+    date: document.getElementById('pe-date').value || new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+    seoScore: score,
+  };
+  if(editingPostId) { const i=posts.findIndex(p=>p.id===editingPostId); if(i>=0)posts[i]=data; }
+  else { posts.push(data); }
+  save();
+  toast(status==='Published'?'🚀 Post published!':'💾 Draft saved!');
+  setTimeout(()=>goTo('posts'),600);
+}
+
+function saveDraft(){savePost('Draft');}
+function publishPost(){savePost('Published');}
+
+// ── PRODUCTS ──
+let prodSearch='', prodCatFilter2='';
+function renderProducts(list) {
+  if(!list) {
+    list = products.filter(p =>
+      (!prodSearch || p.name.toLowerCase().includes(prodSearch.toLowerCase())) &&
+      (!prodCatFilter2 || p.category === prodCatFilter2)
+    );
+  }
+  document.getElementById('prods-tbody').innerHTML = list.length ? list.map(p=>`
+    <tr>
+      <td><input type="checkbox"></td>
+      <td class="td-title">${p.emoji||'🛍️'} ${p.name||'Untitled'}<small>${p.brand||''}</small></td>
+      <td><span class="badge badge-cat">${p.category||'—'}</span></td>
+      <td style="font-size:12px;color:var(--blue);font-weight:600">${p.network||'—'}</td>
+      <td style="font-weight:700;color:var(--gray-900)">${p.price?'$'+parseFloat(p.price).toFixed(2):'—'}${p.sale?'<span style="color:var(--red);margin-left:4px;font-size:11px">Sale $'+parseFloat(p.sale).toFixed(2)+'</span>':''}</td>
+      <td style="font-weight:700;color:var(--green)">${p.commission||'—'}</td>
+      <td>
+        <div class="action-btns">
+          <button class="icon-btn icon-btn-edit" onclick="editProduct('${p.id}')">✏️</button>
+          <button class="icon-btn icon-btn-view" onclick="${p.url?`window.open('${p.url}')`:`toast('No affiliate URL set')`}">🔗</button>
+          <button class="icon-btn icon-btn-del" onclick="confirmDelete('product','${p.id}','${(p.name||'').replace(/'/g,"\\'")}')">🗑️</button>
+        </div>
+      </td>
+    </tr>`).join('')
+  : '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--gray-400)">No products found. <a href="#" onclick="newProduct()" style="color:var(--orange)">Add your first product →</a></td></tr>';
+  document.getElementById('prods-pag-info').textContent = `Showing ${list.length} product${list.length!==1?'s':''}`;
+}
+
+function filterProds(q){prodSearch=q;renderProducts();}
+function filterProdsCat(v){prodCatFilter2=v;renderProducts();}
+
+function newProduct() {
+  editingProdId=null;
+  clearProductEditor();
+  document.getElementById('prod-editor-label').textContent='New Product';
+  goTo('product-editor');
+  populateCatFilters();
+}
+
+function editProduct(id) {
+  const p=products.find(x=>x.id===id);
+  if(!p)return;
+  editingProdId=id;
+  document.getElementById('pp-name').value=p.name||'';
+  document.getElementById('pp-desc').value=p.desc||'';
+  document.getElementById('pp-review').value=p.review||'';
+  document.getElementById('pp-network').value=p.network||'Amazon Associates';
+  document.getElementById('pp-url').value=p.url||'';
+  document.getElementById('pp-cta').value=p.cta||'Check Price on Amazon →';
+  document.getElementById('pp-commission').value=p.commission||'';
+  document.getElementById('pp-aov').value=p.aov||'';
+  document.getElementById('pp-keyword').value=p.keyword||'';
+  document.getElementById('pp-seo-title').value=p.seoTitle||'';
+  document.getElementById('pp-meta').value=p.meta||'';
+  document.getElementById('pp-price').value=p.price||'';
+  document.getElementById('pp-sale').value=p.sale||'';
+  document.getElementById('pp-brand').value=p.brand||'';
+  document.getElementById('pp-stars').value=p.stars||'';
+  document.getElementById('pp-emoji').value=p.emoji||'';
+  document.getElementById('pp-status').value=p.status||'Published';
+  document.getElementById('pp-pros').value=p.pros||'';
+  document.getElementById('pp-cons').value=p.cons||'';
+  document.getElementById('prod-editor-label').textContent='Edit: '+(p.name||'Product');
+  goTo('product-editor');
+  populateCatFilters();
+  setTimeout(()=>{document.getElementById('pp-cat').value=p.category||'';document.getElementById('pp-pet').value=p.petType||'🐱 Cats';},50);
+}
+
+function clearProductEditor() {
+  ['pp-name','pp-desc','pp-review','pp-url','pp-commission','pp-aov','pp-keyword','pp-seo-title','pp-meta','pp-price','pp-sale','pp-brand','pp-stars','pp-emoji','pp-pros','pp-cons'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('pp-cta').value='Check Price on Amazon →';
+  document.getElementById('pp-earn-est').textContent='—';
+}
+
+function saveProduct() {
+  const name=document.getElementById('pp-name').value.trim();
+  if(!name){toast('⚠️ Please enter a product name!');return;}
+  const data={
+    id:editingProdId||uid(),name,
+    desc:document.getElementById('pp-desc').value,
+    review:document.getElementById('pp-review').value,
+    network:document.getElementById('pp-network').value,
+    url:document.getElementById('pp-url').value,
+    cta:document.getElementById('pp-cta').value,
+    commission:document.getElementById('pp-commission').value,
+    aov:document.getElementById('pp-aov').value,
+    keyword:document.getElementById('pp-keyword').value,
+    seoTitle:document.getElementById('pp-seo-title').value,
+    meta:document.getElementById('pp-meta').value,
+    price:document.getElementById('pp-price').value,
+    sale:document.getElementById('pp-sale').value,
+    category:document.getElementById('pp-cat').value,
+    petType:document.getElementById('pp-pet').value,
+    brand:document.getElementById('pp-brand').value,
+    stars:document.getElementById('pp-stars').value,
+    emoji:document.getElementById('pp-emoji').value,
+    status:document.getElementById('pp-status').value,
+    pros:document.getElementById('pp-pros').value,
+    cons:document.getElementById('pp-cons').value,
+  };
+  if(editingProdId){const i=products.findIndex(p=>p.id===editingProdId);if(i>=0)products[i]=data;}
+  else{products.push(data);}
+  save();
+  toast('💾 Product saved!');
+  setTimeout(()=>goTo('products'),600);
+}
+
+// ── CATEGORIES ──
+function renderCats() {
+  document.getElementById('cats-tbody').innerHTML = categories.map(c=>`
+    <tr>
+      <td><strong>${c.emoji||''} ${c.name}</strong><br><small style="color:var(--gray-400)">${c.slug||''}</small></td>
+      <td><span class="badge ${c.type==='Post'?'badge-health':'badge-products'}">${c.type}</span></td>
+      <td style="color:var(--gray-400)">${posts.filter(p=>p.category===c.name).length}</td>
+      <td><button class="icon-btn icon-btn-del" onclick="confirmDelete('category',${c.id},'${c.name.replace(/'/g,"\\'")}')">🗑️</button></td>
+    </tr>`).join('') || '<tr><td colspan="4" style="padding:20px;text-align:center;color:var(--gray-400)">No categories yet</td></tr>';
+}
+
+function addCategory() {
+  const name=document.getElementById('new-cat-name').value.trim();
+  if(!name){toast('⚠️ Enter a category name');return;}
+  categories.push({id:uid(),name,slug:document.getElementById('new-cat-slug').value||slugify(name),type:document.getElementById('new-cat-type').value,emoji:document.getElementById('new-cat-emoji').value,desc:document.getElementById('new-cat-desc').value});
+  ['new-cat-name','new-cat-slug','new-cat-emoji','new-cat-desc'].forEach(id=>document.getElementById(id).value='');
+  save(); renderCats(); toast('✅ Category added!');
+}
+
+// ── PRODUCT CATEGORIES ──
+function renderProdCats() {
+  document.getElementById('pcats-tbody').innerHTML = prodCats.map(c=>`
+    <tr>
+      <td><strong>${c.emoji||''} ${c.name}</strong></td>
+      <td style="color:var(--gray-400)">${c.pet||'—'}</td>
+      <td style="color:var(--gray-400)">${products.filter(p=>p.category===c.name).length}</td>
+      <td><button class="icon-btn icon-btn-del" onclick="confirmDelete('prodcat',${c.id},'${c.name.replace(/'/g,"\\'")}')">🗑️</button></td>
+    </tr>`).join('') || '<tr><td colspan="4" style="padding:20px;text-align:center;color:var(--gray-400)">No product categories yet</td></tr>';
+}
+
+function addProdCat() {
+  const name=document.getElementById('new-pcat-name').value.trim();
+  if(!name){toast('⚠️ Enter a category name');return;}
+  prodCats.push({id:uid(),name,emoji:document.getElementById('new-pcat-emoji').value,pet:document.getElementById('new-pcat-pet').value,desc:document.getElementById('new-pcat-desc').value});
+  ['new-pcat-name','new-pcat-emoji','new-pcat-desc'].forEach(id=>document.getElementById(id).value='');
+  save(); renderProdCats(); toast('✅ Product category added!');
+}
+
+// ── SEO ──
+function updateSlugFromTitle(title) {
+  document.getElementById('pe-slug-display').textContent = slugify(title) || 'your-post-title';
+  document.getElementById('seo-prev-url').textContent = 'petcaredaily.com › ' + (slugify(title)||'your-post-title');
+}
+
+function slugify(t) {
+  return t.toLowerCase().replace(/[^\w\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-').slice(0,60);
+}
+
+function updateSeoPreview() {
+  const title = document.getElementById('pe-seo-title').value || document.getElementById('pe-title').value || 'Your Post Title Here';
+  const meta = document.getElementById('pe-meta').value || 'Your meta description will appear here. Make it compelling to improve click-through rate.';
+  const slug = document.getElementById('pe-slug-display').textContent;
+  document.getElementById('seo-prev-title').textContent = title.slice(0,60);
+  document.getElementById('seo-prev-desc').textContent = meta.slice(0,160);
+  document.getElementById('seo-prev-url').textContent = 'petcaredaily.com › ' + slug;
+}
+
+function checkSeoTitle() {
+  const len = document.getElementById('pe-seo-title').value.length;
+  const el = document.getElementById('seo-title-count');
+  el.textContent = len + ' / 60 chars';
+  el.className = 'char-count ' + (len>=50&&len<=60?'ok':len>60?'bad':'warn');
+  updateSeoScore();
+}
+
+function checkMeta() {
+  const len = document.getElementById('pe-meta').value.length;
+  const el = document.getElementById('meta-count');
+  el.textContent = len + ' / 155 chars';
+  el.className = 'char-count ' + (len>=120&&len<=155?'ok':len>155?'bad':'warn');
+  updateSeoScore();
+}
+
+function updateSeoScore() {
+  const kw = document.getElementById('pe-keyword').value.toLowerCase().trim();
+  const title = document.getElementById('pe-title').value.toLowerCase();
+  const seoTitle = document.getElementById('pe-seo-title').value.toLowerCase();
+  const meta = document.getElementById('pe-meta').value.toLowerCase();
+  const content = document.getElementById('pe-content').value.toLowerCase();
+  const seoTitleLen = document.getElementById('pe-seo-title').value.length;
+  const metaLen = document.getElementById('pe-meta').value.length;
+  const contentLen = content.length;
+
+  const checks = [
+    {label:'Focus keyword is set',ok:kw.length>2},
+    {label:'Keyword in post title',ok:kw&&title.includes(kw)},
+    {label:'Keyword in SEO title',ok:kw&&seoTitle.includes(kw)},
+    {label:'Keyword in meta description',ok:kw&&meta.includes(kw)},
+    {label:'SEO title length (50–60 chars)',ok:seoTitleLen>=50&&seoTitleLen<=60},
+    {label:'Meta description length (120–155 chars)',ok:metaLen>=120&&metaLen<=155},
+    {label:'Content is at least 300 words',ok:content.split(/\s+/).filter(w=>w).length>=300},
+    {label:'Keyword in content (first 100 words)',ok:kw&&content.split(/\s+/).slice(0,100).join(' ').includes(kw)},
+  ];
+
+  const score = Math.round(checks.filter(c=>c.ok).length / checks.length * 100);
+  const fill = document.getElementById('seo-score-fill');
+  fill.style.width = score + '%';
+  fill.style.background = score>=70?'var(--green)':score>=40?'var(--yellow)':'var(--red)';
+  document.getElementById('seo-score-label').textContent = score + ' / 100';
+  document.getElementById('seo-checks').innerHTML = checks.map(c=>`
+    <div class="seo-check">
+      <span class="seo-check-icon">${c.ok?'✅':'❌'}</span>
+      <span style="color:${c.ok?'var(--green)':'var(--gray-600)'}">${c.label}</span>
+    </div>`).join('');
+}
+
+// ── TAB SWITCHER ──
+function switchTab(group, panel, el) {
+  // Only toggle tabs within the same field-group parent
+  const parent = el ? el.closest('.field-group') : document;
+  const scope = parent || document;
+  scope.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  scope.querySelectorAll('.tab-panel').forEach(t=>t.classList.remove('active'));
+  if(el) el.classList.add('active');
+  const target = document.getElementById(group+'-'+panel);
+  if(target) target.classList.add('active');
+  if(panel==='preview-tab') {
+    document.getElementById('content-preview-html').textContent = document.getElementById('pe-content').value || 'Nothing to preview yet.';
+  }
+}
+
+// ── DELETE ──
+function confirmDelete(type, id, name) {
+  document.getElementById('del-modal-msg').textContent = `Delete "${name}"? This cannot be undone.`;
+  deleteCallback = ()=>{
+    // Convert id to string for consistent comparison (handles both numeric and uid string IDs)
+    const sid = String(id);
+    if(type==='post'){posts=posts.filter(p=>String(p.id)!==sid);}
+    else if(type==='product'){products=products.filter(p=>String(p.id)!==sid);}
+        else if(type==='category'){categories=categories.filter(c=>String(c.id)!==sid);}
+    else if(type==='prodcat'){prodCats=prodCats.filter(c=>String(c.id)!==sid);}
+    save();
+    closeModal();
+    toast('🗑️ Deleted successfully');
+    if(type==='post')renderPosts();
+    else if(type==='product')renderProducts();
+    else if(type==='category')renderCats();
+    else if(type==='prodcat')renderProdCats();
+  };
+  document.getElementById('del-confirm-btn').onclick = deleteCallback;
+  document.getElementById('del-modal').classList.add('show');
+}
+function closeModal(){document.getElementById('del-modal').classList.remove('show');}
+document.getElementById('del-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+
+// ── TOAST ──
+function toast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ── INIT ──
+updateCounts();
+renderDashboard();
+</script>
+</body>
+</html>

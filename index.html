@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetCareDaily – Expert Cat & Dog Care Tips, Guides & Reviews</title>
+<meta name="description" content="PetCareDaily helps cat and dog owners give their pets the happiest, healthiest life. Vet-reviewed guides, honest product reviews, and daily tips.">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #FF6B35;
+    --orange-dark: #e85a25;
+    --orange-light: #FFF3EE;
+    --white: #ffffff;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --cat: #8B5CF6;
+    --dog: #3B82F6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Nunito', sans-serif; color: var(--gray-900); background: var(--white); }
+  a { text-decoration: none; color: inherit; }
+  img { max-width: 100%; display: block; }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--gray-900);
+    color: #ccc;
+    font-size: 12px;
+    text-align: center;
+    padding: 6px 20px;
+    letter-spacing: .3px;
+  }
+  .topbar a { color: var(--orange); }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--white);
+    border-bottom: 2px solid var(--orange-light);
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  }
+  .header-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-icon {
+    width: 44px; height: 44px; background: var(--orange);
+    border-radius: 12px; display: flex; align-items: center;
+    justify-content: center; font-size: 22px;
+  }
+  .logo-text { font-size: 22px; font-weight: 800; color: var(--gray-900); }
+  .logo-text span { color: var(--orange); }
+  nav { display: flex; gap: 6px; }
+  nav a {
+    padding: 8px 14px; border-radius: 8px;
+    font-weight: 700; font-size: 14px; color: var(--gray-700);
+    transition: all .2s;
+  }
+  nav a:hover, nav a.active { background: var(--orange-light); color: var(--orange); }
+  .nav-cat { color: var(--cat) !important; }
+  .nav-dog { color: var(--dog) !important; }
+  .nav-cat:hover { background: #f3f0ff !important; }
+  .nav-dog:hover { background: #eff6ff !important; }
+  .header-cta {
+    background: var(--orange); color: white;
+    padding: 9px 18px; border-radius: 8px;
+    font-weight: 700; font-size: 14px;
+    transition: background .2s;
+  }
+  .header-cta:hover { background: var(--orange-dark); color: white; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #FFF3EE 0%, #fff8f5 50%, #fff 100%);
+    padding: 70px 24px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "🐾";
+    position: absolute; font-size: 200px; opacity: .04;
+    top: -20px; right: -30px; transform: rotate(20deg);
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--orange-light); color: var(--orange);
+    padding: 6px 14px; border-radius: 20px;
+    font-size: 13px; font-weight: 700; margin-bottom: 20px;
+    border: 1px solid #ffd4bf;
+  }
+  .hero h1 {
+    font-family: 'Merriweather', serif;
+    font-size: clamp(32px, 5vw, 54px);
+    line-height: 1.2; color: var(--gray-900);
+    max-width: 720px; margin: 0 auto 18px;
+  }
+  .hero h1 span { color: var(--orange); }
+  .hero p {
+    font-size: 18px; color: var(--gray-600);
+    max-width: 560px; margin: 0 auto 32px; line-height: 1.7;
+  }
+  .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--orange); color: white;
+    padding: 14px 28px; border-radius: 10px;
+    font-weight: 800; font-size: 15px;
+    transition: all .2s; box-shadow: 0 4px 14px rgba(255,107,53,.35);
+  }
+  .btn-primary:hover { background: var(--orange-dark); transform: translateY(-1px); }
+  .btn-secondary {
+    background: white; color: var(--gray-700);
+    padding: 14px 28px; border-radius: 10px;
+    font-weight: 700; font-size: 15px; border: 2px solid var(--gray-200);
+    transition: all .2s;
+  }
+  .btn-secondary:hover { border-color: var(--orange); color: var(--orange); }
+  .hero-stats {
+    display: flex; justify-content: center; gap: 40px;
+    margin-top: 48px; flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 800; color: var(--orange); }
+  .stat-label { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
+
+  /* ── CATEGORIES STRIP ── */
+  .cats-strip {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 0 24px;
+  }
+  .cats-strip-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; gap: 0; overflow-x: auto;
+  }
+  .cat-tab {
+    display: flex; align-items: center; gap: 8px;
+    padding: 16px 20px; font-weight: 700; font-size: 14px;
+    color: var(--gray-600); border-bottom: 3px solid transparent;
+    white-space: nowrap; cursor: pointer; transition: all .2s;
+  }
+  .cat-tab:hover { color: var(--orange); border-color: var(--orange); }
+  .cat-tab.active { color: var(--orange); border-color: var(--orange); }
+  .cat-tab .emoji { font-size: 18px; }
+
+  /* ── MAIN LAYOUT ── */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .main-layout {
+    display: grid; grid-template-columns: 1fr 320px;
+    gap: 40px; padding: 48px 0;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .section-title {
+    font-family: 'Merriweather', serif;
+    font-size: 22px; font-weight: 700;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title::before {
+    content: ''; display: block;
+    width: 4px; height: 24px; background: var(--orange); border-radius: 2px;
+  }
+  .see-all {
+    font-size: 13px; font-weight: 700; color: var(--orange);
+    display: flex; align-items: center; gap: 4px;
+  }
+  .see-all:hover { text-decoration: underline; }
+
+  /* ── FEATURED ARTICLE ── */
+  .featured-card {
+    background: var(--gray-50); border-radius: 16px;
+    overflow: hidden; margin-bottom: 32px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--gray-200);
+    transition: box-shadow .2s;
+  }
+  .featured-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,.1); }
+  .featured-img {
+    background: linear-gradient(135deg, #FF6B35, #ff9a6c);
+    min-height: 280px; display: flex; align-items: center;
+    justify-content: center; font-size: 90px;
+  }
+  .featured-body { padding: 32px; display: flex; flex-direction: column; justify-content: center; }
+  .tag {
+    display: inline-block; padding: 4px 10px; border-radius: 6px;
+    font-size: 11px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: .5px; margin-bottom: 12px;
+  }
+  .tag-cat { background: #f3f0ff; color: var(--cat); }
+  .tag-dog { background: #eff6ff; color: var(--dog); }
+  .tag-health { background: #f0fdf4; color: #16a34a; }
+  .tag-nutrition { background: #fff7ed; color: #ea580c; }
+  .tag-products { background: #fdf4ff; color: #9333ea; }
+  .featured-body h2 {
+    font-family: 'Merriweather', serif;
+    font-size: 22px; line-height: 1.4; margin-bottom: 12px;
+    color: var(--gray-900);
+  }
+  .featured-body p { font-size: 14px; color: var(--gray-600); line-height: 1.7; margin-bottom: 20px; }
+  .read-more {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--orange); font-weight: 700; font-size: 14px;
+  }
+  .read-more:hover { gap: 10px; }
+  .author-row {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px; color: var(--gray-600);
+  }
+  .avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--orange); display: flex; align-items: center;
+    justify-content: center; color: white; font-size: 13px; font-weight: 700;
+  }
+
+  /* ── ARTICLE GRID ── */
+  .article-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 20px; margin-bottom: 40px;
+  }
+  .article-card {
+    background: white; border-radius: 12px;
+    border: 1px solid var(--gray-200); overflow: hidden;
+    transition: all .2s; cursor: pointer;
+  }
+  .article-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.09); transform: translateY(-2px); }
+  .article-thumb {
+    height: 160px; display: flex; align-items: center;
+    justify-content: center; font-size: 56px;
+  }
+  .thumb-cat { background: linear-gradient(135deg, #f3f0ff, #e9d5ff); }
+  .thumb-dog { background: linear-gradient(135deg, #eff6ff, #bfdbfe); }
+  .thumb-health { background: linear-gradient(135deg, #f0fdf4, #bbf7d0); }
+  .thumb-nutrition { background: linear-gradient(135deg, #fff7ed, #fed7aa); }
+  .thumb-products { background: linear-gradient(135deg, #fdf4ff, #e9d5ff); }
+  .thumb-orange { background: linear-gradient(135deg, #FFF3EE, #ffd4bf); }
+  .article-body { padding: 16px; }
+  .article-body h3 {
+    font-size: 15px; font-weight: 700; line-height: 1.4;
+    margin: 8px 0 8px; color: var(--gray-900);
+  }
+  .article-body p { font-size: 13px; color: var(--gray-600); line-height: 1.6; margin-bottom: 12px; }
+  .article-meta { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #9ca3af; }
+  .article-meta span { display: flex; align-items: center; gap: 3px; }
+
+  /* ── SIDEBAR ── */
+  .sidebar { display: flex; flex-direction: column; gap: 24px; }
+  .widget {
+    background: white; border: 1px solid var(--gray-200);
+    border-radius: 14px; overflow: hidden;
+  }
+  .widget-header {
+    background: var(--orange-light); padding: 14px 18px;
+    font-weight: 800; font-size: 14px; color: var(--orange);
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid #ffd4bf;
+  }
+  .widget-body { padding: 16px; }
+
+  /* Newsletter widget */
+  .newsletter-widget {
+    background: linear-gradient(135deg, var(--orange), #ff9a6c);
+    border: none; color: white;
+  }
+  .newsletter-widget .widget-header {
+    background: rgba(0,0,0,.15); color: white; border-color: rgba(255,255,255,.2);
+  }
+  .newsletter-widget .widget-body { padding: 20px; }
+  .newsletter-widget p { font-size: 13px; line-height: 1.6; margin-bottom: 14px; opacity: .9; }
+  .nl-input {
+    width: 100%; padding: 10px 14px; border-radius: 8px;
+    border: none; font-size: 14px; margin-bottom: 10px;
+    font-family: 'Nunito', sans-serif; outline: none;
+  }
+  .nl-btn {
+    width: 100%; padding: 11px; border-radius: 8px;
+    background: var(--gray-900); color: white; border: none;
+    font-weight: 800; font-size: 14px; cursor: pointer;
+    font-family: 'Nunito', sans-serif; transition: background .2s;
+  }
+  .nl-btn:hover { background: #1f2937; }
+
+  /* Product widget */
+  .product-item {
+    display: flex; gap: 12px; padding: 12px 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .product-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .product-emoji {
+    width: 52px; height: 52px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; flex-shrink: 0;
+    background: var(--orange-light);
+  }
+  .product-info { flex: 1; }
+  .product-info h4 { font-size: 13px; font-weight: 700; margin-bottom: 3px; color: var(--gray-900); }
+  .product-info .stars { color: #fbbf24; font-size: 11px; letter-spacing: 1px; }
+  .product-info .price { font-size: 14px; font-weight: 800; color: var(--orange); }
+  .product-info .price span { font-size: 11px; color: #9ca3af; text-decoration: line-through; font-weight: 400; margin-left: 4px; }
+  .buy-btn {
+    display: block; text-align: center; margin-top: 6px;
+    background: var(--orange); color: white; padding: 5px 10px;
+    border-radius: 6px; font-size: 11px; font-weight: 700;
+    transition: background .2s;
+  }
+  .buy-btn:hover { background: var(--orange-dark); }
+
+  /* Popular posts widget */
+  .popular-item {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 10px 0; border-bottom: 1px solid var(--gray-100);
+  }
+  .popular-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .popular-num {
+    width: 26px; height: 26px; background: var(--orange-light);
+    color: var(--orange); border-radius: 6px; font-weight: 800;
+    font-size: 13px; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0;
+  }
+  .popular-item h4 { font-size: 13px; font-weight: 700; line-height: 1.4; color: var(--gray-900); }
+  .popular-item span { font-size: 11px; color: #9ca3af; }
+
+  /* ── DOG SECTION ── */
+  .dog-section { margin-top: 8px; }
+  .dog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .dog-card {
+    background: white; border-radius: 12px; overflow: hidden;
+    border: 1px solid var(--gray-200); transition: all .2s;
+  }
+  .dog-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.09); transform: translateY(-2px); }
+  .dog-thumb {
+    height: 130px; background: linear-gradient(135deg, #eff6ff, #bfdbfe);
+    display: flex; align-items: center; justify-content: center; font-size: 52px;
+  }
+  .dog-body { padding: 14px; }
+  .dog-body h3 { font-size: 14px; font-weight: 700; line-height: 1.4; margin: 6px 0 6px; }
+  .dog-body p { font-size: 12px; color: var(--gray-600); line-height: 1.5; }
+
+  /* ── AFFILIATE BANNER ── */
+  .affiliate-banner {
+    background: linear-gradient(135deg, #1e293b, #334155);
+    border-radius: 16px; padding: 32px;
+    display: flex; align-items: center; gap: 24px;
+    margin: 40px 0; color: white;
+  }
+  .banner-emoji { font-size: 64px; flex-shrink: 0; }
+  .banner-text h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+  .banner-text p { font-size: 14px; opacity: .75; line-height: 1.6; margin-bottom: 16px; }
+  .banner-btn {
+    display: inline-block; background: var(--orange); color: white;
+    padding: 10px 22px; border-radius: 8px;
+    font-weight: 800; font-size: 14px; transition: background .2s;
+  }
+  .banner-btn:hover { background: var(--orange-dark); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--gray-900); color: #9ca3af;
+    margin-top: 60px;
+  }
+  .footer-top {
+    max-width: 1200px; margin: 0 auto;
+    padding: 56px 24px 40px;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
+  }
+  .footer-brand .logo-text { color: white; font-size: 20px; }
+  .footer-brand p { font-size: 13px; line-height: 1.7; margin-top: 14px; max-width: 260px; }
+  .footer-col h4 { color: white; font-size: 14px; font-weight: 700; margin-bottom: 16px; }
+  .footer-col a {
+    display: block; font-size: 13px; color: #9ca3af;
+    margin-bottom: 10px; transition: color .2s;
+  }
+  .footer-col a:hover { color: var(--orange); }
+  .footer-bottom {
+    border-top: 1px solid #374151;
+    padding: 20px 24px; text-align: center;
+    font-size: 12px; max-width: 1200px; margin: 0 auto;
+  }
+  .footer-bottom a { color: var(--orange); }
+  .affiliate-disclaimer {
+    background: #1f2937; padding: 12px 24px;
+    text-align: center; font-size: 11px; color: #6b7280;
+    border-top: 1px solid #374151;
+  }
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb {
+    padding: 12px 0; font-size: 12px; color: #9ca3af;
+    display: flex; align-items: center; gap: 6px;
+    max-width: 1200px; margin: 0 auto; padding: 12px 24px;
+  }
+  .breadcrumb a { color: var(--orange); }
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  @media (max-width: 900px) {
+    .main-layout { grid-template-columns: 1fr; }
+    .featured-card { grid-template-columns: 1fr; }
+    .article-grid { grid-template-columns: 1fr; }
+    .dog-grid { grid-template-columns: 1fr 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    nav { display: none; }
+    .affiliate-banner { flex-direction: column; text-align: center; }
+  }
+</style>
+  <!-- SEO -->
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://petcaredaily.com/">
+  <meta name="author" content="PetCareDaily">
+  <meta name="theme-color" content="#FF6B35">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PetCareDaily">
+  <meta property="og:title" content="PetCareDaily – Expert Cat & Dog Care Tips, Guides & Reviews">
+  <meta property="og:description" content="PetCareDaily helps cat and dog owners give their pets the happiest, healthiest life. Vet-reviewed guides, honest product reviews, and daily tips.">
+  <meta property="og:image" content="https://petcaredaily.com/og-home.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@petcaredaily">
+  <meta name="twitter:title" content="PetCareDaily – Expert Cat & Dog Care Tips, Guides & Reviews">
+  <meta name="twitter:description" content="PetCareDaily helps cat and dog owners give their pets the happiest, healthiest life. Vet-reviewed guides, honest product reviews, and daily tips.">
+  <meta name="twitter:image" content="https://petcaredaily.com/og-home.jpg">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://petcaredaily.com/#website",
+          "url": "https://petcaredaily.com/",
+          "name": "PetCareDaily",
+          "description": "Expert cat and dog care guides, vet-reviewed",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {"@type": "EntryPoint", "urlTemplate": "https://petcaredaily.com/?s={search_term_string}"},
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://petcaredaily.com/#organization",
+          "name": "PetCareDaily",
+          "url": "https://petcaredaily.com/",
+          "logo": "https://petcaredaily.com/logo.png",
+          "sameAs": ["https://facebook.com/petcaredaily","https://twitter.com/petcaredaily","https://pinterest.com/petcaredaily"]
+        }
+      ]
+    }
+  </script>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  🐾 New: <a href="#">Best Cat Water Fountains of 2026 — Reviewed & Ranked</a> &nbsp;|&nbsp; Free guides for cat & dog owners
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">🐾</div>
+      <div class="logo-text">PetCare<span>Daily</span></div>
+    </a>
+    <nav>
+      <a href="cat.html" class="nav-cat">🐱 Cats</a>
+      <a href="dog.html" class="nav-dog">🐶 Dogs</a>
+      <a href="health.html" class="active">Health</a>
+      <a href="nutrition.html">Nutrition</a>
+      <a href="products.html">Products</a>
+      <a href="about.html">About</a>
+    </nav>
+    <a href="#newsletter" class="header-cta">📧 Free Newsletter</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🏅 Vet-Reviewed Guides &amp; Real Product Tests</div>
+  <h1>The Home of Happy <span>Cats &amp; Dogs</span></h1>
+  <p>Expert tips, honest product reviews, and vet-backed advice — everything your pet needs to thrive, all in one place.</p>
+  <div class="hero-btns">
+    <a href="cat.html" class="btn-primary">🐱 Explore Cat Guides</a>
+    <a href="dog.html" class="btn-secondary">🐶 Explore Dog Guides</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">200+</div><div class="stat-label">Expert Articles</div></div>
+    <div class="stat"><div class="stat-num">50k+</div><div class="stat-label">Monthly Readers</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Vet-Reviewed</div></div>
+    <div class="stat"><div class="stat-num">4.9★</div><div class="stat-label">Reader Rating</div></div>
+  </div>
+</section>
+
+<!-- CATEGORY TABS -->
+<div class="cats-strip">
+  <div class="cats-strip-inner">
+    <div class="cat-tab active" data-cat="all" onclick="filterCat(this)"><span class="emoji">🔥</span> Trending</div>
+    <div class="cat-tab" data-cat="cat" onclick="filterCat(this)"><span class="emoji">🐱</span> Cat Care</div>
+    <div class="cat-tab" data-cat="dog" onclick="filterCat(this)"><span class="emoji">🐶</span> Dog Care</div>
+    <div class="cat-tab" data-cat="nutrition" onclick="filterCat(this)"><span class="emoji">🥗</span> Nutrition</div>
+    <div class="cat-tab" data-cat="health" onclick="filterCat(this)"><span class="emoji">❤️</span> Health</div>
+    <div class="cat-tab" data-cat="products" onclick="filterCat(this)"><span class="emoji">🛍️</span> Product Reviews</div>
+    <div class="cat-tab" data-cat="puppy" onclick="filterCat(this)"><span class="emoji">👶</span> Puppies & Kittens</div>
+    <div class="cat-tab" data-cat="senior" onclick="filterCat(this)"><span class="emoji">🧓</span> Senior Pets</div>
+  </div>
+</div>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="#">Home</a> <span>›</span> <span>Latest Articles</span>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+  <div class="main-layout">
+
+    <!-- LEFT: ARTICLES -->
+    <main>
+
+      <!-- FEATURED -->
+      <div class="section-header">
+        <div class="section-title">Featured This Week</div>
+      </div>
+
+      <a href="#" class="featured-card filterable" data-cat="cat health">
+        <div class="featured-img">😸</div>
+        <div class="featured-body">
+          <div><span class="tag tag-cat">🐱 Cat Care</span></div>
+          <h2>Best Cat Food for Indoor Cats in 2026: Vet-Approved Picks</h2>
+          <p>Discover the top-rated cat foods for indoor cats. Our vet-reviewed guide covers wet, dry, and raw options to keep your indoor cat healthy and happy all year long.</p>
+          <div class="author-row" style="margin-bottom:16px">
+            <div class="avatar">J</div>
+            <span>Dr. Jane Wilson, DVM</span>
+            <span>·</span>
+            <span>June 18, 2026</span>
+            <span>·</span>
+            <span>8 min read</span>
+          </div>
+          <span class="read-more">Read Full Guide →</span>
+        </div>
+      </a>
+
+      <!-- CAT ARTICLES -->
+      <div class="section-header filterable" data-cat="cat" id="cat-section-header">
+        <div class="section-title">🐱 Cat Articles</div>
+        <a href="cat.html" class="see-all">See all cat guides →</a>
+      </div>
+
+      <div class="article-grid" id="cat-articles">
+        <a href="#" class="article-card filterable" data-cat="cat health">
+          <div class="article-thumb thumb-cat">😺</div>
+          <div class="article-body">
+            <span class="tag tag-health">Health</span>
+            <h3>7 Warning Signs Your Cat Is Sick (Don't Ignore These)</h3>
+            <p>Cats hide illness well. Learn the 7 critical signs every owner must watch for.</p>
+            <div class="article-meta">
+              <span>📅 June 17</span>
+              <span>· 6 min read</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="article-card filterable" data-cat="cat nutrition">
+          <div class="article-thumb thumb-nutrition">🥣</div>
+          <div class="article-body">
+            <span class="tag tag-nutrition">Nutrition</span>
+            <h3>Wet vs Dry Cat Food: Which Is Really Better for Your Cat?</h3>
+            <p>We break down the pros, cons, and which option best suits your cat's needs.</p>
+            <div class="article-meta">
+              <span>📅 June 16</span>
+              <span>· 7 min read</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="article-card filterable" data-cat="cat products">
+          <div class="article-thumb thumb-products">🪣</div>
+          <div class="article-body">
+            <span class="tag tag-products">Products</span>
+            <h3>5 Best Automatic Litter Boxes of 2026 — Hands-Free & Odor-Free</h3>
+            <p>We ranked the top self-cleaning litter boxes based on reliability and odor control.</p>
+            <div class="article-meta">
+              <span>📅 June 15</span>
+              <span>· 9 min read</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="article-card filterable" data-cat="cat health">
+          <div class="article-thumb thumb-orange">🌿</div>
+          <div class="article-body">
+            <span class="tag tag-health">Health</span>
+            <h3>25 Cat-Safe Houseplants (and 10 Toxic Ones to Avoid)</h3>
+            <p>Love plants but have a cat? This guide has everything you need to stay safe.</p>
+            <div class="article-meta">
+              <span>📅 June 14</span>
+              <span>· 5 min read</span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- AFFILIATE BANNER -->
+      <div class="affiliate-banner filterable" data-cat="all">
+        <div class="banner-emoji">🛒</div>
+        <div class="banner-text">
+          <h3>Our Top Pick: Chewy.com for Pet Supplies</h3>
+          <p>Free shipping on orders $49+, auto-ship discounts up to 35%, and 24/7 vet chat. The #1 place our readers buy pet food and supplies.</p>
+          <a href="#" class="banner-btn">Shop Chewy Now →</a>
+        </div>
+      </div>
+
+      <!-- DOG ARTICLES -->
+      <div class="dog-section filterable" data-cat="dog" id="dog-section">
+        <div class="section-header">
+          <div class="section-title">🐶 Dog Articles</div>
+          <a href="dog.html" class="see-all">See all dog guides →</a>
+        </div>
+
+        <div class="dog-grid">
+          <a href="#" class="dog-card" data-cat="dog senior nutrition">
+            <div class="dog-thumb">🐕</div>
+            <div class="dog-body">
+              <span class="tag tag-dog">Dog Care</span>
+              <h3>Best Dog Food for Senior Dogs in 2026</h3>
+              <p>Vet-approved picks for dogs over 7 years old.</p>
+            </div>
+          </a>
+
+          <a href="#" class="dog-card" data-cat="dog health">
+            <div class="dog-thumb" style="background:linear-gradient(135deg,#f0fdf4,#bbf7d0)">🦴</div>
+            <div class="dog-body">
+              <span class="tag tag-health">Health</span>
+              <h3>10 Signs Your Dog Is in Pain (And What To Do)</h3>
+              <p>Subtle signs every dog owner must recognize.</p>
+            </div>
+          </a>
+
+          <a href="#" class="dog-card" data-cat="dog nutrition">
+            <div class="dog-thumb" style="background:linear-gradient(135deg,#fff7ed,#fed7aa)">🎾</div>
+            <div class="dog-body">
+              <span class="tag tag-nutrition">Nutrition</span>
+              <h3>How Much Should You Feed Your Dog Per Day?</h3>
+              <p>A clear guide by weight, age, and activity level.</p>
+            </div>
+          </a>
+
+          <a href="#" class="dog-card" data-cat="dog products">
+            <div class="dog-thumb" style="background:linear-gradient(135deg,#fdf4ff,#e9d5ff)">🛁</div>
+            <div class="dog-body">
+              <span class="tag tag-products">Products</span>
+              <h3>Best Dog Shampoos of 2026: Tested on Real Dogs</h3>
+              <p>For sensitive skin, shedding, and smelly coats.</p>
+            </div>
+          </a>
+
+          <a href="#" class="dog-card" data-cat="dog">
+            <div class="dog-thumb" style="background:linear-gradient(135deg,#eff6ff,#bfdbfe)">🐩</div>
+            <div class="dog-body">
+              <span class="tag tag-dog">Training</span>
+              <h3>How to Train a Dog to Sit, Stay, and Come</h3>
+              <p>Positive reinforcement methods that actually work.</p>
+            </div>
+          </a>
+
+          <a href="#" class="dog-card" data-cat="dog health">
+            <div class="dog-thumb" style="background:linear-gradient(135deg,#FFF3EE,#ffd4bf)">🏃</div>
+            <div class="dog-body">
+              <span class="tag tag-health">Health</span>
+              <h3>How Much Exercise Does Your Dog Really Need?</h3>
+              <p>By breed, age, and energy level — a practical guide.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <!-- Newsletter -->
+      <div class="widget newsletter-widget" id="newsletter">
+        <div class="widget-header">📧 Free Pet Care Newsletter</div>
+        <div class="widget-body">
+          <p>Get weekly vet-backed tips, product deals, and expert guides — straight to your inbox. 12,000+ pet owners already subscribe!</p>
+          <input class="nl-input" type="email" placeholder="your@email.com">
+          <button class="nl-btn">Join Free →</button>
+        </div>
+      </div>
+
+      <!-- Top Products -->
+      <div class="widget">
+        <div class="widget-header">🏆 Reader Favorites This Month</div>
+        <div class="widget-body">
+
+          <div class="product-item">
+            <div class="product-emoji">⛲</div>
+            <div class="product-info">
+              <h4>PetSafe Drinkwell Fountain</h4>
+              <div class="stars">★★★★★</div>
+              <div class="price">$39.95 <span>$54.99</span></div>
+              <a href="#" class="buy-btn">Check on Chewy →</a>
+            </div>
+          </div>
+
+          <div class="product-item">
+            <div class="product-emoji">🤖</div>
+            <div class="product-info">
+              <h4>PETLIBRO Auto Cat Feeder</h4>
+              <div class="stars">★★★★★</div>
+              <div class="price">$59.99 <span>$79.99</span></div>
+              <a href="#" class="buy-btn">Check on Amazon →</a>
+            </div>
+          </div>
+
+          <div class="product-item">
+            <div class="product-emoji">🪣</div>
+            <div class="product-info">
+              <h4>Litter-Robot 4 Self-Cleaning</h4>
+              <div class="stars">★★★★☆</div>
+              <div class="price">$549.00</div>
+              <a href="#" class="buy-btn">Check Price →</a>
+            </div>
+          </div>
+
+          <div class="product-item">
+            <div class="product-emoji">🦴</div>
+            <div class="product-info">
+              <h4>KONG Classic Dog Toy</h4>
+              <div class="stars">★★★★★</div>
+              <div class="price">$13.99 <span>$18.00</span></div>
+              <a href="#" class="buy-btn">Check on Amazon →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Popular Posts -->
+      <div class="widget">
+        <div class="widget-header">🔥 Most Popular Articles</div>
+        <div class="widget-body">
+          <div class="popular-item">
+            <div class="popular-num">1</div>
+            <div>
+              <h4>Best Cat Food for Indoor Cats in 2026</h4>
+              <span>🐱 Cat Nutrition · 24k views</span>
+            </div>
+          </div>
+          <div class="popular-item">
+            <div class="popular-num">2</div>
+            <div>
+              <h4>5 Best Automatic Litter Boxes Reviewed</h4>
+              <span>🛍️ Products · 18k views</span>
+            </div>
+          </div>
+          <div class="popular-item">
+            <div class="popular-num">3</div>
+            <div>
+              <h4>10 Signs Your Dog Is in Pain</h4>
+              <span>🐶 Dog Health · 15k views</span>
+            </div>
+          </div>
+          <div class="popular-item">
+            <div class="popular-num">4</div>
+            <div>
+              <h4>Why Cats Knock Things Over: Explained</h4>
+              <span>🐱 Cat Behavior · 12k views</span>
+            </div>
+          </div>
+          <div class="popular-item">
+            <div class="popular-num">5</div>
+            <div>
+              <h4>25 Cat-Safe Houseplants to Know</h4>
+              <span>🌿 Cat Safety · 10k views</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Widget -->
+      <div class="widget">
+        <div class="widget-header">📂 Browse by Category</div>
+        <div class="widget-body">
+          <a href="#" style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--gray-100);font-size:14px;font-weight:600;color:var(--cat)">🐱 Cat Care <span style="background:#f3f0ff;color:var(--cat);padding:2px 8px;border-radius:10px;font-size:12px">42</span></a>
+          <a href="#" style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--gray-100);font-size:14px;font-weight:600;color:var(--dog)">🐶 Dog Care <span style="background:#eff6ff;color:var(--dog);padding:2px 8px;border-radius:10px;font-size:12px">38</span></a>
+          <a href="#" style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--gray-100);font-size:14px;font-weight:600;color:#16a34a">🥗 Nutrition <span style="background:#f0fdf4;color:#16a34a;padding:2px 8px;border-radius:10px;font-size:12px">31</span></a>
+          <a href="#" style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--gray-100);font-size:14px;font-weight:600;color:#9333ea">🛍️ Products <span style="background:#fdf4ff;color:#9333ea;padding:2px 8px;border-radius:10px;font-size:12px">28</span></a>
+          <a href="#" style="display:flex;justify-content:space-between;padding:9px 0;font-size:14px;font-weight:600;color:#ea580c">❤️ Health <span style="background:#fff7ed;color:#ea580c;padding:2px 8px;border-radius:10px;font-size:12px">45</span></a>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-icon" style="width:38px;height:38px;font-size:18px">🐾</div>
+        <div class="logo-text">PetCare<span>Daily</span></div>
+      </div>
+      <p>Helping cat and dog owners give their pets the happiest, healthiest life possible. All guides are reviewed by licensed veterinarians.</p>
+    </div>
+    <div class="footer-col">
+      <h4>🐱 Cats</h4>
+      <a href="#">Cat Nutrition</a>
+      <a href="#">Cat Health</a>
+      <a href="#">Cat Behavior</a>
+      <a href="#">Indoor Cat Care</a>
+      <a href="#">Kitten Care</a>
+    </div>
+    <div class="footer-col">
+      <h4>🐶 Dogs</h4>
+      <a href="#">Dog Nutrition</a>
+      <a href="#">Dog Health</a>
+      <a href="#">aining</a>
+      <a href="#">Puppy Care</a>
+      <a href="#">Senior Dogs</a>
+    </div>
+    <div class="footer-col">
+      <h4>Info</h4>
+      <a href="#">About Us</a>
+      <a href="#">Contact</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Use</a>
+      <a href="#">Advertise</a>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    © 2026 PetCareDaily.com · All rights reserved · <a href="#">Privacy Policy</a> · <a href="#">Terms</a>
+  </div>
+  <div class="affiliate-disclaimer">
+    ⚠️ Affiliate Disclosure: PetCareDaily participates in affiliate programs including Amazon Associates and Chewy. We may earn a commission when you click links and make a purchase, at no extra cost to you. All opinions are our own.
+  </div>
+</footer>
+
+<script>
+// ── CATEGORY TAB FILTER ──
+const catMap = {
+  all:       () => true,
+  cat:       cats => cats.includes('cat'),
+  dog:       cats => cats.includes('dog'),
+  nutrition: cats => cats.includes('nutrition'),
+  health:    cats => cats.includes('health'),
+  products:  cats => cats.includes('products'),
+  puppy:     cats => cats.includes('puppy'),
+  senior:    cats => cats.includes('senior'),
+};
+
+function filterCat(el) {
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+
+  const selected = el.dataset.cat;
+  const test = catMap[selected] || (() => true);
+
+  document.querySelectorAll('.article-card, .dog-card').forEach(card => {
+    const tags = (card.dataset.cat || '').split(' ');
+    const show = selected === 'all' || test(tags);
+    card.style.display = show ? '' : 'none';
+  });
+
+  document.querySelectorAll('.featured-card.filterable').forEach(card => {
+    const tags = (card.dataset.cat || '').split(' ');
+    card.style.display = (selected === 'all' || test(tags)) ? '' : 'none';
+  });
+
+  const catHeader = document.getElementById('cat-section-header');
+  const catGrid   = document.getElementById('cat-articles');
+  const showCatSection = ['all','cat','health','nutrition','products'].includes(selected);
+  if(catHeader) catHeader.style.display = showCatSection ? '' : 'none';
+  if(catGrid)   catGrid.style.display   = showCatSection ? '' : 'none';
+
+  const dogSection = document.getElementById('dog-section');
+  const showDogSection = ['all','dog','health','nutrition','products'].includes(selected);
+  if(dogSection) dogSection.style.display = showDogSection ? '' : 'none';
+
+  document.querySelectorAll('.affiliate-banner').forEach(b => {
+    b.style.display = selected === 'all' ? '' : 'none';
+  });
+
+  const main = document.querySelector('main');
+  let empty = document.getElementById('empty-state');
+  const anyVisible = [...document.querySelectorAll('.article-card, .dog-card')].some(c => c.style.display !== 'none');
+  if(!anyVisible) {
+    if(!empty) {
+      empty = document.createElement('div');
+      empty.id = 'empty-state';
+      empty.style.cssText = 'text-align:center;padding:60px 20px;color:#9ca3af;font-size:15px';
+      empty.innerHTML = '<div style="font-size:48px;margin-bottom:12px">🔍</div><p>No articles in this category yet.<br>Check back soon!</p>';
+      main.appendChild(empty);
+    }
+    empty.style.display = '';
+  } else {
+      if(empty) empty.style.display = 'none';
+  }
+}
+</script>
+</body>
+</html>
