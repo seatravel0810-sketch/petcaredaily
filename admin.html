@@ -167,6 +167,22 @@ textarea{resize:vertical;min-height:120px;line-height:1.6}
 .pag-btn{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;border:1px solid var(--gray-200);cursor:pointer;font-size:13px;font-weight:600;color:var(--gray-600);background:#fff;transition:all .15s}
 .pag-btn:hover{border-color:var(--orange);color:var(--orange)}
 .pag-btn.active{background:var(--orange);color:#fff;border-color:var(--orange)}
+
+/* ── LOGIN OVERLAY ── */
+.login-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: var(--gray-900); display: flex; align-items: center; justify-content: center;
+  z-index: 9999;
+}
+.login-box {
+  background: #fff; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.login-box h2 { margin-bottom: 20px; text-align: center; color: var(--gray-900); font-family: 'Segoe UI', sans-serif; }
+.login-box input { width: 100%; padding: 12px; margin-bottom: 16px; border: 1px solid var(--gray-300); border-radius: 8px; font-size: 14px; outline: none; }
+.login-box button { width: 100%; padding: 12px; background: var(--orange); color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; }
+.login-box button:hover { background: var(--orange-dark); }
+.login-error { color: var(--red); font-size: 13px; text-align: center; margin-bottom: 10px; display: none; }
 </style>
   <!-- SEO -->
   <meta name="robots" content="noindex,nofollow">
@@ -177,6 +193,17 @@ textarea{resize:vertical;min-height:120px;line-height:1.6}
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
 </head>
 <body>
+
+<!-- LOGIN -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-box">
+    <h2>Admin Login</h2>
+    <div class="login-error" id="login-error">Tài khoản hoặc mật khẩu không đúng!</div>
+    <input type="text" id="login-user" placeholder="Tài khoản">
+    <input type="password" id="login-pass" placeholder="Mật khẩu" onkeydown="if(event.key==='Enter')checkLogin()">
+    <button onclick="checkLogin()">Đăng nhập</button>
+  </div>
+</div>
 
 <!-- SIDEBAR -->
 <aside class="sidebar">
@@ -745,6 +772,25 @@ textarea{resize:vertical;min-height:120px;line-height:1.6}
 </div>
 
 <script>
+// ── LOGIN ──
+function checkLogin() {
+  const u = document.getElementById('login-user').value;
+  const p = document.getElementById('login-pass').value;
+  if (u === 'kimkunoo' && p === 'Daccong08101997') {
+    document.getElementById('login-overlay').style.display = 'none';
+    sessionStorage.setItem('admin_logged_in', 'true');
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+document.addEventListener('DOMContentLoaded', () => {
+  if (sessionStorage.getItem('admin_logged_in') !== 'true') {
+    document.getElementById('login-overlay').style.display = 'flex';
+  } else {
+    document.getElementById('login-overlay').style.display = 'none';
+  }
+});
+
 // ── DATA STORE ──
 let posts = JSON.parse(localStorage.getItem('pcd_posts') || '[]');
 let products = JSON.parse(localStorage.getItem('pcd_products') || '[]');
