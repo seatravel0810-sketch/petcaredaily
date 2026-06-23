@@ -394,7 +394,7 @@ textarea{resize:vertical;min-height:120px;line-height:1.6}
 
           <label>Google Preview</label>
           <div class="seo-preview">
-            <div class="seo-preview-url" id="seo-prev-url">petcaredaily.com › your-post-title</div>
+            <div class="seo-preview-url" id="seo-prev-url">petcaredailyy.com › your-post-title</div>
             <div class="seo-preview-title" id="seo-prev-title">Your Post Title Here</div>
             <div class="seo-preview-desc" id="seo-prev-desc">Your meta description will appear here. Make it compelling to improve click-through rate.</div>
           </div>
@@ -677,7 +677,7 @@ textarea{resize:vertical;min-height:120px;line-height:1.6}
         <label>Robots.txt Rule</label>
         <select><option>Index all pages</option><option>Noindex drafts only</option><option>Custom</option></select>
         <label>Canonical URL Base</label>
-        <input type="url" value="https://petcaredaily.com">
+        <input type="url" value="https://petcaredailyy.com">
         <div style="margin-top:16px">
           <button class="topbar-btn btn-primary" onclick="toast('✅ SEO settings saved!')">Save Settings</button>
         </div>
@@ -702,8 +702,8 @@ textarea{resize:vertical;min-height:120px;line-height:1.6}
       <div class="field-group">
         <div class="field-group-title">⚙️ General Settings</div>
         <label>Site Name</label><input type="text" value="PetCareDaily">
-        <label>Site URL</label><input type="url" value="https://petcaredaily.com">
-        <label>Admin Email</label><input type="email" value="admin@petcaredaily.com">
+        <label>Site URL</label><input type="url" value="https://petcaredailyy.com">
+        <label>Admin Email</label><input type="email" value="admin@petcaredailyy.com">
         <label>Posts Per Page</label><input type="number" value="10" min="5" max="50">
         <label>Time Zone</label><select><option>UTC+7 (Vietnam)</option><option>UTC-5 (EST)</option><option>UTC (London)</option></select>
         <div style="margin-top:16px"><button class="topbar-btn btn-primary" onclick="toast('✅ Settings saved!')">Save Changes</button></div>
@@ -1127,7 +1127,7 @@ function addProdCat() {
 // ── SEO ──
 function updateSlugFromTitle(title) {
   document.getElementById('pe-slug-display').textContent = slugify(title) || 'your-post-title';
-  document.getElementById('seo-prev-url').textContent = 'petcaredaily.com › ' + (slugify(title)||'your-post-title');
+  document.getElementById('seo-prev-url').textContent = 'petcaredailyy.com › ' + (slugify(title)||'your-post-title');
 }
 
 function slugify(t) {
@@ -1140,7 +1140,7 @@ function updateSeoPreview() {
   const slug = document.getElementById('pe-slug-display').textContent;
   document.getElementById('seo-prev-title').textContent = title.slice(0,60);
   document.getElementById('seo-prev-desc').textContent = meta.slice(0,160);
-  document.getElementById('seo-prev-url').textContent = 'petcaredaily.com › ' + slug;
+  document.getElementById('seo-prev-url').textContent = 'petcaredailyy.com › ' + slug;
 }
 
 function checkSeoTitle() {
